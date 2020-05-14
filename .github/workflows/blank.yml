@@ -31,4 +31,4 @@ jobs:
 
     - name: Copy files to S3 with the AWS CLI
       run: |
-        aws s3 sync ./swagger-ui/dist s3://fujitsu-upload/static
+        aws s3 sync ./swagger-ui s3://fujitsu-upload/static
