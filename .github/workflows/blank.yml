@@ -27,14 +27,8 @@ jobs:
     - name: Run a one-line script
       run: echo Hello, world!
 
-    - uses: actions/aws/cli@master
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-      with:
-        args: s3 sync dist/ s3://fujitsu-upload --delete
     # Runs a set of commands using the runners shell
-    #- name: Run a multi-line script
-    #  run: |
-    #    echo Add other actions to build,
-    #    echo test, and deploy your project.
+    - name: Run a multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
