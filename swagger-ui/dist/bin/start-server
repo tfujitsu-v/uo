@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+################################################################################
+#   mixway APIドキュメントの開発用httpサーバをローカルに立ち上げるスクリプト
+################################################################################
+
+require 'webrick'
+
+class NonCachingFileHandler < WEBrick::HTTPServlet::FileHandler
+  def prevent_caching(res)
+    res['Cache-Control'] = 'public, must-revalidate, max-age=0, post-check=0, pre-check=0'
+  end
+
+  def do_GET(req, res)
+    super
+    prevent_caching(res)
+  end
+end
+
+port = (ENV['port'] || 7000).to_i
+document_root = File.dirname(__FILE__) + '/../..'
+server = WEBrick::HTTPServer.new(
+  :Port => port,
+  :StartCallback => Proc.new {
+    puts
+    puts 'Server is running.'
+    puts "Open http://localhost:#{port}/docs/swaggerUI.html in your browser."
+  }
+)
+server.mount '/', NonCachingFileHandler, document_root
+trap('INT') { server.stop }
+server.start

@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+################################################################################
+#   EWSのドキュメントhtmlからyamlに変換するスクリプト
+#   htmlのパラメータtableの部分だけを標準入力に食わせるとパラメータ部分のyamlが出てくる
+#   （html全体を渡せるように改善予定）
+################################################################################
+
+rows = []
+row = []
+ARGF.each do |line|
+  if line =~ /<tr>/
+    row = []
+    next
+  end
+  if line =~ /<td.*?>(.*)<\/td>/
+    row << $1
+  elsif line =~ /<\/tr>/
+    rows << row
+  end
+end
+rows.each do |row|
+  next if row.empty?
+  #puts row.join("\t")
+  name, type, required, description = row
+  y_name = name
+  y_description = description
+  y_description.gsub!(/"[^"]*\/dictionary\//, '"http://docs.ekispert.com/v1/dictionary/')
+  y_description.gsub!(/"[^"]*\/tips\//, '"http://docs.ekispert.com/v1/tips/')
+  y_description.gsub!(/<a href=/, '<a target="_blank" href=')
+  y_description.gsub!(/Default:\s*(\S+)/, 'Default: `\1`')
+  y_required = (required == '◯' ? 'true' : 'false')
+  y_type = case type
+           when "string"
+             "string"
+           when "int"
+             "integer"
+           else
+             "string"
+           end
+
+  puts <<EOF
+        - name: #{y_name}
+          description: |-
+            #{y_description}
+          in: query
+          required: #{y_required}
+          schema:
+            type: #{y_type}
+EOF
+end

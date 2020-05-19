@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require "fileutils"
+
+swagger_ui_html = "swaggerUI.html"
+
+Dir.glob("api/**/*yaml") do |yaml_path|
+  FileUtils.mkdir_p(File.dirname(yaml_path))
+  FileUtils.copy(swagger_ui_html, yaml_path.gsub(".yaml", ".html"), verbose: true)
+end
+
