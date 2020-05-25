@@ -29,7 +29,7 @@ jobs:
         aws-region: ap-northeast-1
     - name: Copy ymls to html
       run: |
-        touch ./swagger-ui/dist/test_copy.html
+        python ./swagger-ui/bin/cp_index.py 
     - name: Copy files to S3 with the AWS CLI
       run: |
         aws s3 sync ./swagger-ui/dist s3://fujitsu-upload/static
