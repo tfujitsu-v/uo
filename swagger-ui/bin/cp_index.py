@@ -6,5 +6,4 @@ print(swagger_ui_html)
 ymls = glob.glob(dir + "/swagger-ui/dist/api/*.yaml")
 for yml in ymls:
     shutil.copyfile(swagger_ui_html,yml.replace("yaml", "html"))
-    print(yml)
 

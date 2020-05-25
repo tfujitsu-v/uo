@@ -1,0 +1,82 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: mixway API Documents
+servers:
+  - url: https://mixway.ekispert.jp
+security:
+  - ApiKeyAuth: []
+paths:
+  /v1/json/station/light:
+    get:
+      tags:
+        - 駅簡易情報
+      description: |-
+        ### 概要
+        指定された条件に当てはまる駅の情報を返します。<br>
+        [駅すぱあとWebサービスの対応するAPI](http://docs.ekispert.com/v1/api/station.html)<br>
+
+        ### リクエストパラメータ
+        <table class="comparison">
+        <tr><th>パラメータ名</th><th>EWS</th><th>mixway</th><th>備考</th></tr>
+        <tr><td>key</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>name</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>code</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>type</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>prefectureCode</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>corporationBind</td><td>○</td><td>○</td><td></td></tr>
+        </table>
+        <div class="about-comparison-table">
+          ○＝パラメータあり　☓＝パラメータなし　両方○でも機能差異がある場合は備考欄および後述のParameters節に記載。
+        </div>
+
+        ### レスポンス
+        本APIのレスポンス構造は駅すぱあとWebサービスの対応するAPI（JSON版）と完全に同一です。
+      parameters:
+        - name: name
+          description: |-
+            候補文字列。codeと排他。かつ省略可なため、codeが存在しない場合はname扱いとなります。
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: code
+          description: |-
+            [駅コード](http://docs.ekispert.com/v1/dictionary/station-code/)。name と排他。
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: type
+          description: |-
+            駅の[交通種別](http://docs.ekispert.com/v1/dictionary/type/) 。[複数指定](http://docs.ekispert.com/v1/api/#%E8%A4%87%E6%95%B0%E6%8C%87%E5%AE%9A)可。省略可。省略時は指定なしとなります。
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: prefectureCode
+          description: |-
+            [都道府県コード](http://docs.ekispert.com/v1/dictionary/prefecture-code/)。code利用時には無効です。[複数指定](http://docs.ekispert.com/v1/api/#%E8%A4%87%E6%95%B0%E6%8C%87%E5%AE%9A)可。省略可。省略時は全国が対象となります。
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: corporationBind
+          description: |-
+            固定会社名。指定した[会社](http://docs.ekispert.com/v1/dictionary/corporation/)のみ利用します。[複数指定](http://docs.ekispert.com/v1/api/#%E8%A4%87%E6%95%B0%E6%8C%87%E5%AE%9A)可。最大10件。省略可。省略時は制限のない通常の取得となります。
+          in: query
+          required: false
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: 正常レスポンスの場合
+components:
+  securitySchemes:
+    ApiKeyAuth:        # arbitrary name for the security scheme
+      type: apiKey
+      in: query       # can be "header", "query" or "cookie"
+      name: key  # name of the header, query parameter or cookie
+  schemas:
+
