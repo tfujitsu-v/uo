@@ -35,4 +35,4 @@ jobs:
         python ./swagger-ui/bin/cp_index.py 
     - name: Copy files to S3 with the AWS CLI
       run: |
-        aws s3 sync ./swagger-ui s3://fujitsu-upload/docs
+        aws s3 sync . s3://fujitsu-upload/docs
