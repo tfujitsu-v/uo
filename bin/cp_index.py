@@ -7,9 +7,10 @@ swagger_ui_html = basedir + "/swaggerUI.html"
 # Added NOINDEX in Staging
 if len(sys.argv) > 1 and sys.argv[1] == 'dev':
     with open(swagger_ui_html, "r") as file:
-        filedata=file.read()
-        filedata=filedata.replace('<head>', '<head><meta name="robots" content="nofollow" />')
-        file.write(filedata)
+        data_lines=file.read()
+    data_lines = data_lines.replace('<head>', '<head><meta name="robots" content="noindex, nofollow" />')
+    with open(swagger_ui_html, mode="w") as f:
+        f.write(data_lines)
 
 dir = basedir + "/api/"
 for root, dirs, files in os.walk(dir):
