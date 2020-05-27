@@ -28,7 +28,7 @@ jobs:
         python ./bin/cp_index.py
     - name: mv to branch_dir
       run: |
-        mv . ${GITHUB_REF##*/}
+        mv index.html api ${GITHUB_REF##*/}
     - name: Copy files to S3 with the AWS CLI
       run: |
         aws s3 ${GITHUB_REF##*/} . s3://fujitsu-upload/confidentials/docs
