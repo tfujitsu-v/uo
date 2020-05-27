@@ -22,10 +22,13 @@ jobs:
         python --version
     - name: create directory
       run: |
-        echo ${GITHUB_REF##*/}
+        mkdir ${GITHUB_REF##*/}
     - name: Copy ymls to html
       run: |
-        python ./bin/cp_index.py 
+        python ./bin/cp_index.py
+    - name: mv to branch_dir
+      run: |
+        mv . ${GITHUB_REF##*/}
     - name: Copy files to S3 with the AWS CLI
       run: |
-        aws s3 sync . s3://fujitsu-upload/docs
+        aws s3 ${GITHUB_REF##*/} . s3://fujitsu-upload/confidentials/docs
