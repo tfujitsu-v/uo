@@ -1,0 +1,161 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: mixway API Documents
+servers:
+  - url: https://mixway.ekispert.jp
+security:
+  - ApiKeyAuth: []
+paths:
+  /v1/json/rail:
+    get:
+      tags:
+        - 平均路線情報
+      description: |-
+        ### 概要
+        「駅すぱあと」の保持する平均路線の情報を取得します。
+        nameを指定すると、名称の前方一致による絞り込みを行います。
+        oldNameを指定すると、新名称を取得できます。
+        fromとtoを指定した場合は、2点間を結ぶ平均路線が取得できます。
+        dateを指定すると、その日に運行している平均路線に絞り込めます。
+        serializeDataとsectionIndexを指定すると、区間の列車リストを取得できます。<br>
+        [駅すぱあとWebサービスの対応するAPI](http://docs.ekispert.com/v1/api/rail.html)<br>
+
+        ### リクエストパラメータ
+        <table class="comparison">
+        <tr><th>パラメータ名</th><th>EWS</th><th>mixway</th><th>備考</th></tr>
+        <tr><td>key</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>name</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>oldName</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>corporationCode</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>corporationName</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>from</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>to</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>prefectureCode</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>date</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>type</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>offset</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>limit</td><td>○</td><td>○</td><td></td></tr>
+        <tr><td>serializeData</td><td>○</td><td>○</td><td>mixway形式経路シリアライズデータのみ利用可能</td></tr>
+        <tr><td>checkEngineVersion</td><td>○</td><td>○</td><td>デフォルト値が異なる</td></tr>
+        <tr><td>sectionIndex</td><td>○</td><td>○</td><td></td></tr>
+        </table>
+        <div class="about-comparison-table">
+          ○＝パラメータあり　☓＝パラメータなし　両方○でも機能差異がある場合は備考欄および後述のParameters節に記載。
+        </div>
+
+        ### レスポンス
+        本APIのレスポンス構造は駅すぱあとWebサービスの対応するAPI（JSON版）と完全に同一です。
+      parameters:
+        - name: name
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/average-rail/">平均路線</a>の名称（前方一致）。oldName, corporationName, from, to, serializeDataと排他。省略可
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: oldName
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/average-rail/">平均路線</a>の旧名称。name, corporationName, from, to, serializeDataと排他。省略可。<br>※路線バス路線名は旧名称に対応していません。
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: corporationCode
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/corporation/">会社</a>コード。name, oldName, corporationName, from, to, serializeDataと排他。省略可
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: corporationName
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/corporation/">会社</a>の名称。name, oldName, corporationCode, from, to, serializeDataと排他。省略可
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: from
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/station-code/">駅コード</a>または<a target="_blank" href="http://docs.ekispert.com/v1/dictionary/station-name/">駅の名称</a>。name, oldName, corporationName, serializeDataと排他。to指定時に必須
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: to
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/station-code/">駅コード</a>または<a target="_blank" href="http://docs.ekispert.com/v1/dictionary/station-name/">駅の名称</a>。name, oldName, corporationName, serializeDataと排他。from指定時に必須
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: prefectureCode
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/prefecture-code/">都道府県コード</a>。省略可。省略時は全国が対象となります。
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: date
+          description: |-
+            日付。省略可。省略時は全日付が対象となります。<br>Format: <em>YYYYMMDD</em>
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: type
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/type/">交通種別</a>。<a target="_blank" href="http://docs.ekispert.com/v1/dictionary/detail-rail-type/">詳細路線種別</a>を付加することができます。省略可。省略時は全種別が対象となります。
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          description: |-
+            データの取得開始位置。name, serializeData指定時は無効となります。省略可。<br>Default: `1`
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          description: |-
+            データのブロック件数。最大100件まで指定できます。name, serializeData指定時は無効となります。省略可。<br>Default: `100`
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: serializeData
+          description: |-
+            **mixway形式経路シリアライズデータ**。駅すぱあとWebサービス形式経路シリアライズデータは利用できません。
+            name, oldName, corporationName, from, toと排他。省略可
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: checkEngineVersion
+          description: |-
+            完全な<a target="_blank" href="http://docs.ekispert.com/v1/dictionary/course-serialize-data/">経路シリアライズデータ</a>の再現を行う場合は、シリアライズデータ作成時のエンジンバージョンと再現時のエンジンバージョンが同一かのチェックを有効にします。エンジンバージョンが異なる場合は、エラーを返します。省略可。<br>指定できる値: <br>- true: チェックする<br>- false: チェックしない<br>
+            Default: `false`<br>
+            `※ 駅すぱあとWebサービスとはデフォルト値が異なります。`
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sectionIndex
+          description: |-
+            <a target="_blank" href="http://docs.ekispert.com/v1/dictionary/section-index/">区間インデックス</a>。serializeData指定時に必須
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 正常レスポンスの場合
+components:
+  securitySchemes:
+    ApiKeyAuth:        # arbitrary name for the security scheme
+      type: apiKey
+      in: query       # can be "header", "query" or "cookie"
+      name: key  # name of the header, query parameter or cookie
+  schemas:
+
