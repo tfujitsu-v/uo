@@ -2,8 +2,8 @@ import glob, os, shutil
 import subprocess
 
 basedir = os.getcwd()
-swagger_ui_html = basedir + "/swagger-ui/dist/swaggerUI.html"
-dir = basedir + "/swagger-ui/dist/api/"
+swagger_ui_html = basedir + "/swaggerUI.html"
+dir = basedir + "/api/"
 for root, dirs, files in os.walk(dir):
     for fname in files:
         if fname.find("yaml"):
