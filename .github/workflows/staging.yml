@@ -31,4 +31,4 @@ jobs:
         mv index.html api ${GITHUB_REF##*/}
     - name: Copy files to S3 with the AWS CLI
       run: |
-        aws s3 ${GITHUB_REF##*/} . s3://fujitsu-upload/confidentials/docs
+        aws s3 sync ${GITHUB_REF##*/} s3://fujitsu-upload/confidentials/docs
