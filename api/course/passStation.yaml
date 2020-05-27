@@ -68,4 +68,5 @@ components:
       type: apiKey
       in: query       # can be "header", "query" or "cookie"
       name: key  # name of the header, query parameter or cookie
+  schemas:
 
