@@ -8,12 +8,12 @@ on:
   pull_request:
     branches:
       - master
-    #types: [closed]
+    types: [closed]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
-    #if: github.event.pull_request.merged == true # マージされた時のみ
+    if: github.event.pull_request.merged == true # マージされた時のみ
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
