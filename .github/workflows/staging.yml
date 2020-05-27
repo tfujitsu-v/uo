@@ -7,7 +7,7 @@ name: StagingCI
 on: 
   push:
     branches:
-      - '!master' # except master
+      - !master
 jobs:
   build:
     runs-on: ubuntu-latest
