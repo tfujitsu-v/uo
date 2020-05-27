@@ -20,6 +20,11 @@ jobs:
     - name: python version
       run: |
         python --version
+    - name: create directory
+      run: |
+        echo $args
+      with:
+        args: ${{ github.branch_name }}
     - name: Copy ymls to html
       run: |
         python ./bin/cp_index.py 
