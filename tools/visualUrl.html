@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>経路探索URLから経路を可視化するツール</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
+
+  <link class="css" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/val00250/GUI@master/expGuiCourse/expCss/expGuiCourse.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/val00250/GUI@master/expGuiCourse/expGuiCourse.js" charset="UTF-8"></script>
+
+  <style>
+    body { background: #f8f8f8; }
+    .container { max-width: 960px; margin: 0 auto; padding-bottom: 50px; }
+    h1 { font-size: 16px; }
+    h2 { font-size: 14px; margin-top: 0px;}
+    hr { margin: 20px 0px; }
+    #url { width: 100%; line-height: 20px; }
+    #result { width: 700px; margin: 0px auto; background: #fff; }
+    #resultTable { margin: 20px; border: 1px solid #666; border-collapse: collapse; background: #fff; width: 100%; }
+    #resultTable td,th { border: 1px solid #666; padding: 2px 5px; font-size: 12px; }
+    #resultTable td { white-space: nowrap; font-size: 12px; font-family: "Courier New", Consolas, monospace; }
+    .serializeData { width: 100%; box-sizing:border-box; background: #f1f4f5; }
+    .teikiDisplayRoute { width: 100%; box-sizing:border-box; background: #f1f4f5; }
+    .teikiSerializeData { width: 100%; box-sizing:border-box; background: #f1f4f5; }
+    button { font-size: 16px; padding: 3px 20px; }
+  </style>
+
+  <script>
+    var resultApp;
+    var $url;
+    var app;
+
+    $(function() {
+      $url = $('#url');
+
+      resultApp = new expGuiCourse(document.getElementById('result'));
+
+      app = new Vue({
+        el: '#resultTable',
+        data: {
+          rows: [],
+        }
+      });
+  
+      enableAutoHeight();
+
+      if (location.hash != '') {
+        var url = location.hash.replace(/#/, '');
+        $url.val(url);
+        format_onclick();
+        search_onclick();
+      }
+    });
+
+    // テキストエリアの高さ自動調整オン
+    function enableAutoHeight() {
+      $url.on('input', function(e) {
+        adjustHeight($url);
+      });
+    }
+
+    // テキストエリアの高さを調整
+    function adjustHeight($textarea) {
+      var lineHeight = parseInt($textarea.css('lineHeight'));
+      var lineCount = ($textarea.val() + '\n').match(/\n/g).length;
+      $textarea.height(lineHeight * lineCount);
+    }
+
+    // 検索ボタンがクリックされたとき呼ばれる
+    function search_onclick() {
+      var url = $url.val();
+
+      if (url == '') {
+        alert('URLを入力してください');
+        return;
+      } else if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
+        // URLの場合
+        url = url.replace(/\s+/g, '');
+        url = url.replace(/http:/, 'https:');
+        url = url.replace(/\/xml\//, '/json/');
+        getResponse(url);
+      } else {
+        alert('URLの形式が正しくないようです');
+      }
+    }
+
+    function getResponse(url) {
+      $('#message').text('Requesting...');
+      var startTime = new Date();
+      $.getJSON(url)
+        .then(function(res) {
+          try {
+            var endTime = new Date();
+            $('#message').text((endTime - startTime) + ' ms');
+            location.hash = url;
+            resultApp.setResult(JSON.stringify(res));
+            displayResultTable(res);
+          } catch (ex) {
+            console.error(ex);
+            alert('予期しないエラーが発生しました');
+          }
+        })
+        .catch(function(err) {
+          console.error(err);
+          if (err.responseText) {
+            $('#message').text(err.responseText);
+          } else {
+            alert('サーバに接続できないか、またはレスポンスが不正な形式でした');
+          }
+        });
+    }
+
+    // 整形ボタンがクリックされたとき呼ばれる
+    function format_onclick() {
+      var url = $url.val();
+      if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
+        url = url.replace(/([?&])/g, '\n$1');
+        $url.val(url);
+      }
+      adjustHeight($url);
+    }
+
+    // 空白削除ボタンがクリックされたとき呼ばれる
+    function removeSpace_onclick() {
+      $url.val($url.val().replace(/\s+/g, ''));
+    }
+
+    // シリアライズデータのテーブルを表示
+    function displayResultTable(res) {
+      if (res && res.ResultSet && res.ResultSet.Course) {
+        var rows = [];
+        var courses = toArray(res.ResultSet.Course);
+        courses.forEach(function(course) {
+          var serializeData = '';
+          var teikiDisplayRoute = '';
+          var teikiSerializeData = '';
+
+          if (course.SerializeData) {
+            serializeData = course.SerializeData;
+          }
+          if (course.Teiki && course.Teiki.DisplayRoute) {
+            teikiDisplayRoute = course.Teiki.DisplayRoute;
+          }
+          if (course.Teiki && course.Teiki.SerializeData) {
+            teikiSerializeData = course.Teiki.SerializeData;
+          }
+
+          rows.push({
+            serializeData: serializeData,
+            teikiDisplayRoute: teikiDisplayRoute,
+            teikiSerializeData: teikiSerializeData,
+          });
+        });
+        app.$data.rows = rows;
+        //$('#resultTable').html(html);
+      }
+    }
+
+    // 配列にする
+    function toArray(obj) {
+      if (obj == undefined) {
+        return [];
+      } else {
+        return (obj instanceof Array) ? obj : [obj];
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <h1>経路探索URLから経路を可視化するツール</h1>
+
+    <ul>
+      <li>/search/course/extremeのフルURLを貼り付けてから「経路表示」ボタンをクリックしてください。</li>
+      <ul>
+        <li>例: <code>https://mixway.ekispert.jp/v1/json/search/course/extreme?key=****************&viaList=22671:22828</code></li>
+      </ul>
+    </ul>
+
+    <textarea id="url" rows="1" placeholder="/search/course/extremeのフルURLを入れてください"></textarea>
+
+    <div>
+      <button onclick="search_onclick()">経路表示</button>
+      <button onclick="format_onclick()">URL整形</button>
+      <button onclick="removeSpace_onclick()">空白削除</button>
+    </div>
+
+    <div id="message"></div>
+    <div id="result"></div>
+    <table id="resultTable">
+      <tr><th>No</th><th>経路シリアライズデータ</th><th>定期経路文字列</th><th>定期シリアライズデータ</th></tr>
+      <tr v-for="(row, index) in rows">
+        <td>{{ index + 1 }}</td>
+        <td><input type="text" v-bind:value="row.serializeData" class="serializeData" readonly></td>
+        <td><input type="text" v-bind:value="row.teikiDisplayRoute" class="teikiDisplayRoute" readonly></td>
+        <td><input type="text" v-bind:value="row.teikiSerializeData" class="teikiSerializeData" readonly></td>
+      </tr>
+    </table>
+
+    <br>
+    <hr>
+
+    <h2>お役立ちツール</h2>
+    <ul>
+      <li><a href="./visualUrl.html" target="_blank">経路探索URLから経路を可視化するツール</a></li>
+      <li><a href="./visualJson.html" target="_blank">経路探索JSONから経路を可視化するツール</a></li>
+    </ul>
+  </div>
+</body>
+</html>
