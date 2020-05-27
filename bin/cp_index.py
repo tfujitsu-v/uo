@@ -4,11 +4,11 @@ import subprocess
 basedir = os.getcwd()
 swagger_ui_html = basedir + "/swaggerUI.html"
 
-# devの場合は、noindexを付与
+# Added NOINDEX in Staging
 if len(sys.argv) > 1 and sys.argv[1] == 'dev':
     with open(swagger_ui_html,　"w"　,encoding="utf-8") as file:
         filedata=file.read()
-        filedata=filedata.replace('<head>','<head><meta name="robots" content="nofollow" />')
+        filedata=filedata.replace('<head>', '<head><meta name="robots" content="nofollow" />')
         file.write(filedata)
 
 dir = basedir + "/api/"
