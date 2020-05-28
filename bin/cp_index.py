@@ -1,5 +1,4 @@
-# -*- Coding: utf-8 -*-
-
+# coding: UTF-8
 import glob, os, shutil, sys
 import subprocess
 
