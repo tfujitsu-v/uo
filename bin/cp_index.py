@@ -10,7 +10,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'dev':
     with open(swagger_ui_html, "r") as file:
         data_lines=file.read()
     data_lines = data_lines.replace('<head>', '<head><meta name="robots" content="noindex, nofollow" />')
-    data_lines = data_lines.replace('<title>', '<title>' + u'要確認:')
+    data_lines = data_lines.replace('<title>', '<title>CONFIRM:')
     with open(swagger_ui_html, mode="w") as f:
         f.write(data_lines)
 
