@@ -24,24 +24,15 @@ jobs:
     - name: python version
       run: |
         python --version
-    - name: os upgrade
+    - name: python-yaml install
       run: |
-        sudo apt update; sudo apt upgrade
-    - name: python3 install
-      run: |
-        sudo apt install python3.7 python3.7-dev python3.7-distutils
-    - name: pip install
-      run: |
-        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py; python3.7 get-pip.py --user
-    - name: pyyaml install
-      run: |
-        sudo pip3 install pyyaml
+        sudo apt-get install python-yaml
     - name: create directory
       run: |
         mkdir ${GITHUB_REF##*/}
     - name: Copy ymls to html
       run: |
-        /usr/bin/python3.7 ./bin/cp_index.py dev
+        python ./bin/cp_index.py dev
     - name: mv to branch_dir
       run: |
         mv index.html api ${GITHUB_REF##*/}
