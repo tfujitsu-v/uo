@@ -3,6 +3,8 @@ import glob, os, shutil, sys, yaml
 
 basedir = os.getcwd()
 swagger_ui_html = basedir + "/swaggerUI.html"
+index_html = basedir + "/index.html"
+print(index_html)
 
 # Added NOINDEX in Staging
 if len(sys.argv) > 1 and sys.argv[1] == 'dev':
@@ -21,6 +23,5 @@ for root, dirs, files in os.walk(dir):
             if ext == ".yaml":
                 target_file = root + "/" + fname
                 yml = yaml.load(target_file)
-                print(yml)
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
 
