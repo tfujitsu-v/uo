@@ -30,6 +30,9 @@ jobs:
     - name: pip install
       run: |
         sudo apt-get install python-pip
+    - name: yaml
+      run: |
+        pip install PyYaml
     - name: create directory
       run: |
         mkdir ${GITHUB_REF##*/}
