@@ -26,5 +26,5 @@ for root, dirs, files in os.walk(dir):
                     print(yml['info'])
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
 with open(index_html, mode="w") as f:
-    f.write("aaa")
+    f.write("<html><body><h2>aaa</h2></body></html>")
 
