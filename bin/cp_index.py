@@ -21,5 +21,6 @@ for root, dirs, files in os.walk(dir):
             if ext == ".yaml":
                 target_file = root + "/" + fname
                 yml = yaml.load(target_file)
+                print(yml)
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
 
