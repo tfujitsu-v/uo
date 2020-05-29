@@ -24,12 +24,15 @@ jobs:
     - name: python version
       run: |
         python --version
+    - name: os upgrade
+      run: |
+        sudo apt update; sudo apt upgrade
+    - name: python3 install
+      run: |
+        sudo apt install python3.7 python3.7-dev python3.7-distutils
     - name: pip install
       run: |
-        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py; sudo python get-pip.py
-    - name: install pyyaml
-      run: |
-        sudo pip install pyyaml
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py; python3.7 get-pip.py --user
     - name: create directory
       run: |
         mkdir ${GITHUB_REF##*/}
