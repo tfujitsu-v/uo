@@ -1,6 +1,5 @@
 # coding: UTF-8
-import glob, os, shutil, sys
-import subprocess
+import glob, os, shutil, sys, pyyaml
 
 basedir = os.getcwd()
 swagger_ui_html = basedir + "/swaggerUI.html"
@@ -21,5 +20,6 @@ for root, dirs, files in os.walk(dir):
             _root, ext = os.path.splitext(fname)
             if ext == ".yaml":
                 target_file = root + "/" + fname
+                yml = yaml.load(target_file)
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
 
