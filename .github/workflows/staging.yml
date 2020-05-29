@@ -33,6 +33,9 @@ jobs:
     - name: pip install
       run: |
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py; python3.7 get-pip.py --user
+    - name: pyyaml install
+      run: |
+        pip install pyyaml
     - name: create directory
       run: |
         mkdir ${GITHUB_REF##*/}
