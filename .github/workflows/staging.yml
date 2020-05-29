@@ -24,9 +24,9 @@ jobs:
     - name: python version
       run: |
         python --version
-    - name: python-yaml install
+    - name: easy_install install
       run: |
-        sudo apt-get install python-yaml
+        sudo apt-get install python-setuptools; sudo easy_install pip
     - name: create directory
       run: |
         mkdir ${GITHUB_REF##*/}
