@@ -1,5 +1,5 @@
 # coding: UTF-8
-import glob, os, shutil, sys, pyyaml
+import glob, os, shutil, sys, yaml
 
 basedir = os.getcwd()
 swagger_ui_html = basedir + "/swaggerUI.html"
