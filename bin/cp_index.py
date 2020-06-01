@@ -1,6 +1,10 @@
 # coding: UTF-8
 import glob, os, shutil, sys, yaml
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 basedir = os.getcwd()
 swagger_ui_html = basedir + "/swaggerUI.html"
 index_html = basedir + "/index.html"
@@ -33,10 +37,10 @@ link_html = ""
 for link in links:
     link_html += "<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (link['url'], link['name'], link['name'])
 # Index html生成
-with open(index_html, "r", encoding="utf-8") as file:
+with open(index_html, "r") as file:
     data_lines=file.read()
 data_lines = data_lines.replace("##CONTENTS##", link_html)
 print("======")
 print(data_lines)
-with open(index_html, mode="w", encoding="utf-8") as f:
+with open(index_html, mode="w") as f:
     f.write(data_lines)
