@@ -32,10 +32,10 @@ link_html = ""
 for link in links:
     link_html += "<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (link, link, link)
 # Index html生成
-with open(swagger_ui_html, "r") as file:
+with open(index_html, "r") as file:
     data_lines=file.read()
 data_lines = data_lines.replace("##CONTENTS##", link_html)
 print("======")
 print(data_lines)
-with open(swagger_ui_html, mode="w") as f:
+with open(index_html, mode="w") as f:
     f.write(data_lines)
