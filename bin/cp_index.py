@@ -29,8 +29,9 @@ for root, dirs, files in os.walk(dir):
                 with open(target_file) as file:
                     yml = yaml.safe_load(file)
                     url = yml['paths'].keys()[0]
+                    category = ""
                     name = yml['paths'].values()[0]['get']['tags'][0]
-                    links.append({ "name": name, "url": url })
+                    links.append({ "name": name, "url": url, "category": category })
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
 
 link_html = ""
