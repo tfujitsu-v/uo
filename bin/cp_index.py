@@ -34,7 +34,8 @@ for link in links:
 # Index html生成
 with open(swagger_ui_html, "r") as file:
     data_lines=file.read()
-print("aaaaaa")
 data_lines = data_lines.replace("##CONTENTS##", link_html)
+print("======")
+print(data_lines)
 with open(swagger_ui_html, mode="w") as f:
     f.write(data_lines)
