@@ -15,6 +15,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'dev':
         f.write(data_lines)
 
 dir = basedir + "/api/"
+links = []
 for root, dirs, files in os.walk(dir):
     for fname in files:
         if fname.find("yaml"):
@@ -24,7 +25,15 @@ for root, dirs, files in os.walk(dir):
                 with open(target_file) as file:
                     yml = yaml.safe_load(file)
                     print(yml['paths'].keys())
+                    links.append(yml['paths'].keys()[0])
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
-with open(index_html, mode="w") as f:
-    f.write("<html><body><h2>aaa</h2></body></html>")
 
+link_html = ""
+for link in links:
+    link_html += "<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (link, link, link)
+# Index html生成
+with open(swagger_ui_html, "r") as file:
+    data_lines=file.read()
+data_lines.replace("##CONTENTS##", link_html)
+with open(swagger_ui_html, mode="w") as f:
+    f.write(data_lines)
