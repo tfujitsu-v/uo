@@ -35,7 +35,7 @@ for root, dirs, files in os.walk(dir):
 
 link_html = ""
 for link in links:
-    link_html += "<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (link['url'], link['name'], link['name'])
+    link_html += "<tr><td>%s</td><td><a href='%s'>%s</a></td><td>%s</td></tr>" % (link['category'], link['url'], link['name'], link['name'])
 # Index html生成
 with open(index_html, "r") as file:
     data_lines=file.read()
