@@ -33,7 +33,7 @@ for root, dirs, files in os.walk(dir):
                     url = yml['paths'].keys()[0]
                     category = ""
                     name = yml['paths'].values()[0]['get']['tags'][0]
-                    links.append({ "name": name, "url": url.replace("/v1/json/", env_prefix), "category": category })
+                    links.append({ "name": name, "url": url.replace("/v1/json/", env_prefix) + ".html", "category": category })
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
 
 link_html = ""
