@@ -6,6 +6,7 @@ servers:
   - url: https://mixway.ekispert.jp
 security:
   - ApiKeyAuth: []
+category: "駅の情報"
 paths:
   /v1/json/course/trainStation:
     get:
