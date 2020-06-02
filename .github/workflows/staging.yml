@@ -38,7 +38,7 @@ jobs:
         mkdir ${GITHUB_REF##*/}
     - name: Copy ymls to html
       run: |
-        python ./bin/cp_index.py dev
+        python ./bin/cp_index.py ${GITHUB_REF##*/}
     - name: mv to branch_dir
       run: |
         mv index.html api ${GITHUB_REF##*/}

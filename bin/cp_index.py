@@ -8,9 +8,11 @@ sys.setdefaultencoding('utf8')
 basedir = os.getcwd()
 swagger_ui_html = basedir + "/swaggerUI.html"
 index_html = basedir + "/index.html"
-
+env_prefix = "/docs/api/"
 # Added NOINDEX in Staging
-if len(sys.argv) > 1 and sys.argv[1] == 'dev':
+if len(sys.argv) > 1:
+    branch_name = sys.argv[1]
+    env_prefix = "/confidentials/%s/api/" % branch_name
     with open(swagger_ui_html, "r") as file:
         data_lines=file.read()
     data_lines = data_lines.replace('<head>', '<head><meta name="robots" content="noindex, nofollow" />')
@@ -31,7 +33,7 @@ for root, dirs, files in os.walk(dir):
                     url = yml['paths'].keys()[0]
                     category = ""
                     name = yml['paths'].values()[0]['get']['tags'][0]
-                    links.append({ "name": name, "url": url, "category": category })
+                    links.append({ "name": name, "url": url.replace("/v1/json/", env_prefix), "category": category })
                 shutil.copyfile(swagger_ui_html,target_file.replace("yaml", "html"))
 
 link_html = ""
